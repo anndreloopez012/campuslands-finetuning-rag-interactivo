@@ -1,0 +1,8 @@
+.DS_Store
+.env
+*.log
+cookies.txt
+node_modules/
+api/node_modules/
+coverage/
+.superpowers/

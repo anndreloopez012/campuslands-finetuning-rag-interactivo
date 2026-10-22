@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Laboratorio interactivo de 30 minutos sobre Fundamentos de Fine-Tuning (SFT, RLHF, DPO) y Arquitectura RAG con Rerankers y Base de Datos Vectorial para Campuslands."
+    />
+    <title>AI Lab · Fine-Tuning &amp; RAG (Oráculo Neural)</title>
+    <link rel="stylesheet" href="styles.css?v=1" />
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+    <div class="ambient ambient--one" aria-hidden="true"></div>
+    <div class="ambient ambient--two" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <a class="brand" href="#inicio" aria-label="Ir al inicio">
+        <svg class="brand__mark" viewBox="0 0 48 48" aria-hidden="true">
+          <path d="M24 4 7 13.5v21L24 44l17-9.5v-21z" />
+          <path d="M24 14a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 5a5 5 0 1 1 0 10 5 5 0 0 1 0-10z" />
+        </svg>
+        <span>
+          <small>Campuslands · Inteligencia Artificial II · Eduin Salas Viloria</small>
+          <strong>AI LAB / 04 · <em>FINE-TUNING &amp; RAG</em></strong>
+        </span>
+      </a>
+
+      <div class="session-tools" aria-label="Herramientas de la sesión">
+        <div class="timer" aria-label="Cronómetro de 30 minutos">
+          <span class="timer__pulse" aria-hidden="true"></span>
+          <span id="timerDisplay" class="timer__time" aria-live="polite">30:00</span>
+          <button id="timerToggle" class="icon-button" type="button" title="Iniciar cronómetro" aria-label="Iniciar cronómetro">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z" /></svg>
+          </button>
+          <button id="timerReset" class="icon-button" type="button" title="Reiniciar cronómetro" aria-label="Reiniciar cronómetro">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.34 5.66M20 4v7h-7" /></svg>
+          </button>
+        </div>
+        <button id="focusToggle" class="focus-button" type="button" aria-pressed="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M8 21H3v-5m13 5h5v-5" /></svg>
+          <span>Modo enfoque</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Ruta del laboratorio">
+        <div class="progress-card">
+          <div class="progress-card__head">
+            <span>Progreso</span>
+            <strong id="progressLabel">0%</strong>
+          </div>
+          <div class="progress-track" aria-hidden="true">
+            <span id="progressBar"></span>
+          </div>
+          <p id="progressMessage">7 misiones. Un Oráculo Neural con Fine-Tuning + RAG Reranked.</p>
+        </div>
+
+        <nav class="step-nav" aria-label="Navegación de etapas">
+          <a class="step-nav__item is-active" href="#inicio" data-section="inicio">
+            <span class="step-nav__number">00</span>
+            <span>
+              <strong>Fine-Tuning &amp; Elementos</strong>
+              <small>Pretraining a Modelo Ajustado</small>
+            </span>
+          </a>
+          <a class="step-nav__item" href="#post-entrenamiento" data-section="post-entrenamiento">
+            <span class="step-nav__number">01</span>
+            <span>
+              <strong>Post-Training &amp; Refinamiento</strong>
+              <small>SFT · RLHF · DPO · Matriz VS</small>
+            </span>
+          </a>
+          <a class="step-nav__item" href="#rag" data-section="rag">
+            <span class="step-nav__number">02</span>
+            <span>
+              <strong>Arquitectura RAG</strong>
+              <small>Las 4 Etapas en Tiempo Real</small>
+            </span>
+          </a>
+          <a class="step-nav__item" href="#reranker" data-section="reranker">
+            <span class="step-nav__number">03</span>
+            <span>
+              <strong>RAG Reranked</strong>
+              <small>Precisión &amp; Corrective RAG</small>
+            </span>
+          </a>
+          <a class="step-nav__item" href="#controladores" data-section="controladores">
+            <span class="step-nav__number">04</span>
+            <span>
+              <strong>Controladores &amp; Rutas</strong>
+              <small>API Express del Oráculo</small>
+            </span>
+          </a>
+          <a class="step-nav__item" href="#vector-db" data-section="vector-db">
+            <span class="step-nav__number">05</span>
+            <span>
+              <strong>Base de Datos Vectorial</strong>
+              <small>Instalación &amp; Configuración</small>
+            </span>
+          </a>
+          <a class="step-nav__item" href="#pruebas" data-section="pruebas">
+            <span class="step-nav__number">06</span>
+            <span>
+              <strong>Boss Fight: Simulador IA</strong>
+              <small>SFT + RAG Reranker en Vivo</small>
+            </span>
+          </a>
+        </nav>
+
+        <div class="sidebar__footer">
+          <span class="status-dot"></span>
+          <span>IA II · Fine-Tuning · RAG · Reranker</span>
+        </div>
+      </aside>
+
+      <main id="contenido">
+        <!-- SECCIÓN 00: FUNDAMENTOS DE FINE-TUNING Y ELEMENTOS -->
+        <section id="inicio" class="lesson hero" data-step="0">
+          <div class="hero__eyebrow">
+            <span>Inteligencia Artificial II</span>
+            <span>Fine-Tuning &amp; RAG</span>
+            <span>Oráculo Neural Campuslands</span>
+          </div>
+
+          <div class="hero__grid">
+            <div>
+              <span class="kicker">LABORATORIO INTERACTIVO / CAMPUSLANDS</span>
+              <h1>Domina <em>Fine-Tuning &amp; RAG</em> con Rerankers</h1>
+              <p class="hero__lead">
+                Aprende a fondo toda la teoría de la presentación oficial de <strong>Fundamentos de Fine-Tuning y RAG</strong> mientras construyes en Node.js y Express el <strong>Oráculo Neural de Campuslands</strong>: preparación de datasets <code>SFT (JSONL)</code>, búsqueda semántica en una <strong>Vector Database</strong> y un motor de <strong>Reranking (Corrective RAG)</strong> en <strong>30 minutos</strong>.
+              </p>
+              <div class="hero__actions">
+                <button class="primary-button" type="button" data-start-lab>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z" /></svg>
+                  <span>Iniciar misión IA (30:00)</span>
+                </button>
+                <a class="text-link" href="#reranker">Probar Simulador de Reranker en vivo</a>
+              </div>
+            </div>
+
+            <aside class="mission-card" aria-label="Tarjeta de misión">
+              <div class="mission-card__top">
+                <span>MISIÓN IA II</span>
+                <span class="mission-card__label">ORÁCULO NEURAL</span>
+              </div>
+              <div class="mission-orbit" aria-hidden="true">
+                <span class="orbit-node orbit-node--one">SFT</span>
+                <span class="orbit-node orbit-node--two">VEC</span>
+                <span class="orbit-node orbit-node--three">RNK</span>
+                <div class="mission-orbit__core">RAG</div>
+              </div>
+              <h2>Fine-Tuning + RAG</h2>
+              <p>Especializa el tono del modelo con SFT y fundamenta sus respuestas en tiempo real con Vector DB + Reranker.</p>
+              <div class="endpoint-pill">
+                <span>POST</span> /api/v1/rag/consultar
+              </div>
+            </aside>
+          </div>
+
+          <!-- TEORÍA DIAPOSITIVAS 02 Y 03: DEFINICIÓN Y FLUJO DE FINE-TUNING -->
+          <div class="theory-showcase">
+            <article class="theory-card">
+              <span class="theory-card__tag">DIAPOSITIVA 02 · ¿QUÉ ES FINE-TUNING?</span>
+              <h3>De Conocimiento General a Especialización de Dominio</h3>
+              <p>
+                El <strong>fine-tuning (ajuste fino)</strong> es el proceso mediante el cual se toma un <strong>modelo de lenguaje previamente entrenado</strong> —una red neuronal de gran escala que ha aprendido patrones generales del lenguaje a partir de un conjunto masivo de datos— y se entrena nuevamente utilizando un <strong>conjunto de datos más pequeño y específico</strong>. En otras palabras, se trata de adaptar un modelo con conocimientos generales para que se especialice en un <strong>dominio o tarea concreta</strong>.
+              </p>
+            </article>
+
+            <article class="theory-card">
+              <span class="theory-card__tag theory-card__tag--cyan">DIAPOSITIVAS 02 Y 03 · CICLO DE VIDA DEL LLM</span>
+              <h3>Pretraining → Fine-Tuning → Inference &amp; Deployment</h3>
+              <p>
+                <strong>1. Pretraining:</strong> Establece una base amplia de conocimiento a partir de datos web masivos (<code>Web data → Base LLM</code>).<br />
+                <strong>2. Supervised Fine-Tuning:</strong> Conecta una base de conocimiento específica o privada (<code>Specific Private Knowledge Base</code>) y un dataset de tareas para optimizar el modelo.<br />
+                <strong>3. Inference &amp; Deployment:</strong> El <code>Fine-tuned LLM</code> genera respuestas expertas en aplicaciones del mundo real.
+              </p>
+            </article>
+          </div>
+
+          <!-- TEORÍA DIAPOSITIVA 04: LOS 4 ELEMENTOS DEL FINE-TUNING -->
+          <div class="diagram-box">
+            <span class="section-index">DIAPOSITIVA 04 · FINE-TUNING - ELEMENTOS</span>
+            <h3>Los 4 Elementos Esenciales del Ajuste Fino</h3>
+            <p>Todo proceso de Fine-Tuning exitoso articula estos cuatro componentes:</p>
+            <div class="check-list">
+              <article>
+                <strong><i>1</i> Modelo preentrenado (Base LLM)</strong>
+                <p>Es capaz de responder preguntas generales, redactar textos creativos, resumir artículos o traducir idiomas gracias a su pre-entrenamiento masivo.</p>
+              </article>
+              <article>
+                <strong><i>2</i> Objetivo del ajuste fino</strong>
+                <p>Convertir este modelo generalista en un <strong>experto generador de respuestas</strong> de un área de conocimiento específica (<strong>ventas, soporte técnico</strong>, legal, salud, etc.).</p>
+              </article>
+              <article>
+                <strong><i>3</i> Datos de ajuste fino (Task-specific dataset)</strong>
+                <p>Conjunto de datos curado compuesto por <strong>interacciones reales</strong> (por ejemplo, conversaciones históricas verificadas entre usuarios y agentes humanos).</p>
+              </article>
+              <article>
+                <strong><i>4</i> Modelo ajustado (Final Model)</strong>
+                <p>Tras el proceso de fine-tuning, el modelo mejora significativamente su comprensión de las consultas específicas: <strong>ajusta su tono, agrega políticas internas e incorpora la jerga o terminología propia de la organización</strong>.</p>
+              </article>
+            </div>
+          </div>
+
+          <div class="starting-point">
+            <div>
+              <h2>Estructura del Proyecto</h2>
+              <p>Todo el código del ejercicio vive en <code>api/</code>. Construiremos un motor híbrido capaz de preparar datasets SFT y ejecutar consultas RAG con Reranker.</p>
+            </div>
+            <div class="file-tree" aria-label="Árbol de archivos">
+              <span>api/</span>
+              <span>├── package.json <small>// Express 5, CORS, express-validator y node:test</small></span>
+              <span>├── src/</span>
+              <span>│   ├── app.js <small>// Servidor Express + CORS + SemVer</small></span>
+              <span>│   ├── server.js <small>// Arranque en puerto 3000</small></span>
+              <span>│   ├── dtos/oraculo.dto.js <small>// ParFineTuningDTO, CrearDocumentoDTO y ConsultaRAGDTO</small></span>
+              <span>│   ├── validators/oraculo.validator.js <small>// Reglas express-validator</small></span>
+              <span>│   ├── services/finetuning.service.js <small>// Generador SFT (JSONL) y matriz comparativa</small></span>
+              <span>│   ├── services/vector.service.js <small>// Embeddings de 6 dimensiones y similitud de coseno</small></span>
+              <span>│   ├── services/reranker.service.js <small>// Reranker + Corrective RAG (Correct/Ambiguous/Incorrect)</small></span>
+              <span>│   ├── controllers/oraculo.controller.js <small>// Controladores HTTP del Oráculo</small></span>
+              <span>│   └── routes/oraculo.routes.js <small>// Endpoints RESTful (/finetuning, /rag, /comparar)</small></span>
+              <span>└── test/api.test.js <small>// 10 pruebas automatizadas (node --test)</small></span>
+            </div>
+          </div>
+
+          <button class="checkpoint" type="button" data-complete="0">
+            <span class="checkpoint__box"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg></span>
+            <span><strong>Checkpoint 00</strong> Comprendo qué es el Fine-Tuning y sus 4 elementos (Modelo preentrenado, Objetivo, Datos de ajuste fino y Modelo ajustado).</span>
+          </button>
+        </section>
+
+        <!-- SECCIÓN 01: PRE-ENTRENAMIENTO VS FINE-TUNING, POST-ENTRENAMIENTO Y REFINAMIENTO -->
+        <section id="post-entrenamiento" class="lesson" data-step="1">
+          <header class="lesson__header">
+            <div>
+              <span class="section-index">01 / POST-ENTRENAMIENTO Y REFINAMIENTO (SLIDES 5, 6 Y 7) · 5 MIN</span>
+              <h2>SFT, RLHF, DPO y Matriz Fine-Tuning vs RAG</h2>
+            </div>
+            <span class="lesson__stamp lesson__stamp--yellow">POST-TRAINING</span>
+          </header>
+
+          <!-- DIAPOSITIVA 05: DIFERENCIAS CON EL PRE-ENTRENAMIENTO -->
+          <div class="theory-showcase">
+            <article class="theory-card">
+              <span class="theory-card__tag">DIAPOSITIVA 05 · PRE-TRAINING VS FINE-TUNING</span>
+              <h3>Diferencias con el Pre-Entrenamiento</h3>
+              <p>
+                Las principales diferencias entre el <strong>pre-entrenamiento (<em>pre-training</em>)</strong> y el <strong>ajuste fino (<em>fine-tuning</em>)</strong> se encuentran en su <strong>escala, objetivo, tipo de datos y costo computacional</strong>. Ambos procesos cumplen funciones complementarias dentro del ciclo de desarrollo de un LLM:
+              </p>
+              <p style="margin-top:8px">
+                • <strong>Pre-Training (from scratch):</strong> Datos masivos <em>Unlabeled</em> (Common Crawl, arXiv, Wikipedia) → Modelo Base como <strong>LLaMA (Meta)</strong>.<br />
+                • <strong>Fine-Tuning (Instructured / Supervised):</strong> Misma arquitectura con pesos actualizados usando datos <em>Labeled</em> (ej. 175 tareas semilla Self-Instruct) → Modelo instruido como <strong>Alpaca</strong>.
+              </p>
+            </article>
+
+            <!-- DIAPOSITIVA 06: TIPOS DE POST-ENTRENAMIENTO -->
+            <article class="theory-card">
+              <span class="theory-card__tag theory-card__tag--coral">DIAPOSITIVA 06 · TIPOS DE POST-ENTRENAMIENTO</span>
+              <h3>Las 4 Ramas del Post-Training of LLMs</h3>
+              <p>
+                <strong>✔ 1. Fine-tuning Supervisado (SFT):</strong> <em>Supervised Fine-Tuning</em>, <em>Adaptive Fine-Tuning</em> y <em>Reinforcement Fine-Tuning</em>.<br />
+                <strong>✔ 2. Alineación (Alignment):</strong> <code>RLHF</code> (RL with Human Feedback), <code>RLAIF</code> (RL with AI Feedback) y <code>DPO</code> (Direct Preference Optimization).<br />
+                <strong>✔ 3. Mejora del Razonamiento (Reasoning Enhancement):</strong> <em>Self-Refine</em> y <em>RL for Reasoning</em>.<br />
+                <strong>✔ 4. Optimización de Eficiencia (Efficiency Optimization):</strong> <em>Model Compression</em>, <em>Parameter-Efficient Fine-Tuning (PEFT / LoRA)</em> y <em>Knowledge Distillation</em>.
+              </p>
+            </article>
+          </div>
+
+          <!-- DIAPOSITIVA 07: LOS 5 TIPOS DE REFINAMIENTO -->
+          <div class="diagram-box">
+            <span class="section-index">DIAPOSITIVA 07 · TIPOS DE REFINAMIENTO</span>
+            <h3>5 Estrategias de Refinamiento de Modelos</h3>
+            <p>Selecciona la técnica adecuada según la cantidad de ejemplos y el nivel de adaptación requerido:</p>
+            <div class="check-list check-list--three">
+              <article>
+                <strong><i>✔</i> 1. Transfer Learning</strong>
+                <p><strong>Aprendizaje por Transferencia:</strong> Reutiliza representaciones aprendidas en una tarea general para impulsar una nueva tarea específica.</p>
+              </article>
+              <article>
+                <strong><i>✔</i> 2. Supervised Fine-tuning (SFT)</strong>
+                <p><strong>Ajuste Fino Supervisado:</strong> Re-entrena el modelo con pares entrada-salida etiquetados de alta calidad.</p>
+              </article>
+              <article>
+                <strong><i>✔</i> 3. Few-shot Fine-tuning</strong>
+                <p><strong>Ajuste Fino con Pocos Ejemplos:</strong> Adapta el comportamiento cuando solo dispones de un conjunto reducido de muestras.</p>
+              </article>
+              <article>
+                <strong><i>✔</i> 4. Instruction Fine-tuning</strong>
+                <p><strong>Ajuste Fino por Instrucciones:</strong> Enseña al modelo a seguir órdenes estructuradas, formatos JSON y directrices de usuario.</p>
+              </article>
+              <article>
+                <strong><i>✔</i> 5. Domain-Specific Fine-tuning</strong>
+                <p><strong>Adaptación de Dominio:</strong> Especializa el vocabulario y criterio del LLM en medicina, leyes, finanzas o soporte técnico.</p>
+              </article>
+              <article>
+                <strong><i>★</i> Regla de Oro en Clase</strong>
+                <p><strong>Fine-Tuning</strong> cambia la <em>forma de actuar y el tono</em>; <strong>RAG</strong> inyecta <em>hechos y documentos actualizados</em>.</p>
+              </article>
+            </div>
+          </div>
+
+          <!-- DIAPOSITIVA 07: TABLA COMPARATIVA FINE-TUNING VS RAG + PROMPT ENGINEERING -->
+          <div class="diagram-box">
+            <span class="section-index">DIAPOSITIVA 07 · TABLA OFICIAL DE ARQUITECTURA</span>
+            <h3>Comparativa Técnica: Fine-Tuning vs. RAG + Prompt Engineering</h3>
+            <p>Analiza la tabla comparativa de la presentación para decidir qué arquitectura necesita tu proyecto:</p>
+            <div style="overflow-x:auto">
+              <table class="vs-table">
+                <thead>
+                  <tr>
+                    <th>Criterio</th>
+                    <th>Fine-Tuning (Ajuste Fino)</th>
+                    <th>RAG + Prompt Engineering</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Caso de Uso Canónico</td>
+                    <td>Incrementar el rendimiento del LLM en tareas específicas, optimizar costos o forzar esquemas de decodificación y tono.</td>
+                    <td>Anclar (<em>grounding</em>) las generaciones del LLM con contexto para reducir alucinaciones y personalizar respuestas con datos dinámicos.</td>
+                  </tr>
+                  <tr>
+                    <td>Mecanismo</td>
+                    <td>Cambia el comportamiento del LLM <strong>actualizando directamente los pesos de la red neuronal</strong> y/o su arquitectura.</td>
+                    <td>1) Recuperación de contexto relevante vía búsqueda neuronal o léxica. 2) Inyección de dicho contexto en el prompt (<em>in-context learning</em>).</td>
+                  </tr>
+                  <tr>
+                    <td>Analogía con el Aprendizaje Humano</td>
+                    <td><strong>New memory formation</strong> (Formación de nueva memoria a largo plazo / especialización profunda).</td>
+                    <td><strong>Open book quiz</strong> (Examen a libro abierto consultando manuales en tiempo real).</td>
+                  </tr>
+                  <tr>
+                    <td>Requisito de Datos</td>
+                    <td>Necesita de <strong>100 a 10,000+ muestras de entrenamiento</strong> curadas (conversaciones etiquetadas).</td>
+                    <td>Necesita almacenes de datos vectoriales (<em>Vector Stores</em>) y <em>retrievers</em> con capacidades de servicio en tiempo real.</td>
+                  </tr>
+                  <tr>
+                    <td>Compromiso Inicial y Continuo</td>
+                    <td>Curación de dataset (<code>$ a $$$$$</code>), horas/días de entrenamiento en GPU y MLOps de endpoints ajustados.</td>
+                    <td>Instanciar Vector Database (<code>$</code>), construir índices e ingestar embeddings (<code>$-$$$</code>), más pipelines de actualización documental.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="task-callout">
+            <span>PASO 1</span>
+            <p>Crea <code>api/src/dtos/oraculo.dto.js</code> y <code>api/src/validators/oraculo.validator.js</code> para sanitizar y validar tanto los pares de Fine-Tuning como las consultas RAG.</p>
+          </div>
+
+          <article class="code-panel code-panel--coral" data-code-panel>
+            <div class="code-panel__bar">
+              <div><i></i><i></i><i></i></div>
+              <span>CREA · api/src/dtos/oraculo.dto.js</span>
+              <button type="button" data-copy-code>Copiar código</button>
+            </div>
+            <pre><code><span class="code-line"><b>1</b><span><em>export class</em> ParFineTuningDTO {</span></span>
+<span class="code-line"><b>2</b><span>  constructor(data = {}) {</span></span>
+<span class="code-line"><b>3</b><span>    <em>this</em>.dominio = String(data.dominio ?? <q>""</q>).trim().toLowerCase();</span></span>
+<span class="code-line"><b>4</b><span>    <em>this</em>.tono = String(data.tono ?? <q>"profesional y pedagógico"</q>).trim().toLowerCase();</span></span>
+<span class="code-line"><b>5</b><span>    <em>this</em>.preguntaUsuario = String(data.preguntaUsuario ?? <q>""</q>).trim();</span></span>
+<span class="code-line"><b>6</b><span>    <em>this</em>.respuestaAgente = String(data.respuestaAgente ?? <q>""</q>).trim();</span></span>
+<span class="code-line"><b>7</b><span>  }</span></span>
+<span class="code-line"><b>8</b><span>}</span></span>
+<span class="code-line"><b>9</b><span></span></span>
+<span class="code-line"><b>10</b><span><em>export class</em> CrearDocumentoDTO {</span></span>
+<span class="code-line"><b>11</b><span>  constructor(data = {}) {</span></span>
+<span class="code-line"><b>12</b><span>    <em>this</em>.titulo = String(data.titulo ?? <q>""</q>).trim();</span></span>
+<span class="code-line"><b>13</b><span>    <em>this</em>.categoria = String(data.categoria ?? <q>"general"</q>).trim().toLowerCase();</span></span>
+<span class="code-line"><b>14</b><span>    <em>this</em>.contenido = String(data.contenido ?? <q>""</q>).trim();</span></span>
+<span class="code-line"><b>15</b><span>  }</span></span>
+<span class="code-line"><b>16</b><span>}</span></span>
+<span class="code-line"><b>17</b><span></span></span>
+<span class="code-line"><b>18</b><span><em>export class</em> ConsultaRAGDTO {</span></span>
+<span class="code-line"><b>19</b><span>  constructor(data = {}) {</span></span>
+<span class="code-line"><b>20</b><span>    <em>this</em>.pregunta = String(data.pregunta ?? <q>""</q>).trim();</span></span>
+<span class="code-line"><b>21</b><span>    <em>const</em> rawK = Number(data.topK ?? 3);</span></span>
+<span class="code-line"><b>22</b><span>    <em>this</em>.topK = Number.isFinite(rawK) ? Math.min(Math.max(Math.trunc(rawK), 1), 5) : 3;</span></span>
+<span class="code-line"><b>23</b><span>    <em>this</em>.useReranker = data.useReranker !== undefined ? Boolean(data.useReranker) : true;</span></span>
+<span class="code-line"><b>24</b><span>  }</span></span>
+<span class="code-line"><b>25</b><span>}</span></span></code></pre>
+          </article>
+
+          <button class="checkpoint" type="button" data-complete="1">
+            <span class="checkpoint__box"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg></span>
+            <span><strong>Checkpoint 01</strong> Comprendo las diferencias entre Pre-Training y Fine-Tuning, los tipos de Post-Entrenamiento (SFT, RLHF, DPO) y la matriz comparativa contra RAG.</span>
+          </button>
+        </section>
+
+        <!-- SECCIÓN 02: ARQUITECTURA RAG EN 4 ETAPAS -->
+        <section id="rag" class="lesson" data-step="2">
+          <header class="lesson__header">
+            <div>
+              <span class="section-index">02 / RETRIEVAL-AUGMENTED GENERATION (SLIDES 8 Y 9) · 5 MIN</span>
+              <h2>Arquitectura RAG en 4 Etapas</h2>
+            </div>
+            <span class="lesson__stamp lesson__stamp--blue">RAG MODEL</span>
+          </header>
+
+          <!-- TEORÍA DIAPOSITIVA 08 -->
+          <div class="theory-showcase">
+            <article class="theory-card">
+              <span class="theory-card__tag theory-card__tag--cyan">DIAPOSITIVA 08 · DEFINICIÓN DE RAG</span>
+              <h3>Combinación de Recuperación + Generación</h3>
+              <p>
+                La arquitectura <strong>Retrieval-Augmented Generation (RAG)</strong> destaca por su capacidad para combinar de manera estratégica dos enfoques que históricamente han evolucionado por separado: los <strong>métodos basados en recuperación de información (<em>retrieval-based</em>)</strong> y los <strong>modelos generativos (<em>generation-based</em>)</strong>. La articulación de ambos permite generar respuestas con una <strong>mayor precisión, profundidad contextual y fundamentación documental</strong>.
+              </p>
+            </article>
+
+            <article class="theory-card">
+              <span class="theory-card__tag theory-card__tag--mint">DIAPOSITIVA 08 · BÚSQUEDA EN TIEMPO REAL</span>
+              <h3>Conocimiento Actualizado sin Reentrenar Pesos</h3>
+              <p>
+                La arquitectura RAG introduce un <strong>mecanismo de búsqueda documental en tiempo real</strong> que complementa el conocimiento del modelo (consultando bases vectoriales como Pinecone o Qdrant, manuales de producto, APIs de configuración e historial), permitiéndole acceder a <strong>información actualizada y específica antes de generar una respuesta</strong>.
+              </p>
+            </article>
+          </div>
+
+          <!-- DIAPOSITIVA 09: RAG ARCHITECTURE MODEL INTERACTIVO (4 PASOS) -->
+          <div class="diagram-box">
+            <span class="section-index">DIAPOSITIVA 09 · RAG ARCHITECTURE MODEL (INTERACTIVO)</span>
+            <h3>Explora los 4 Pasos del Modelo de Arquitectura RAG</h3>
+            <p>Haz clic en cada etapa numerada del diagrama para inspeccionar cómo fluyen los datos desde el cliente hasta la Base de Datos Vectorial y el LLM:</p>
+            <div class="rag-pipeline" role="group" aria-label="Pasos del RAG Architecture Model">
+              <button type="button" class="rag-step-btn is-active" data-rag-step="step1">
+                <span>PASO 1</span>
+                <strong>Question (Client → Framework)</strong>
+                <small>Consulta en lenguaje natural</small>
+              </button>
+              <button type="button" class="rag-step-btn" data-rag-step="step2">
+                <span>PASO 2</span>
+                <strong>Semantic Search ↔ Vector DB</strong>
+                <small>Original &amp; New Content → Contextual Data</small>
+              </button>
+              <button type="button" class="rag-step-btn" data-rag-step="step3">
+                <span>PASO 3</span>
+                <strong>Prompt (Framework → LLM)</strong>
+                <small>Pregunta + Evidencia Documental</small>
+              </button>
+              <button type="button" class="rag-step-btn" data-rag-step="step4">
+                <span>PASO 4</span>
+                <strong>Post Processing → Response</strong>
+                <small>LLM → Framework → Client</small>
+              </button>
+            </div>
+            <div id="ragStepDetail" class="rag-step-detail" aria-live="polite">
+              <strong>Paso 1 — Question (Client → Framework):</strong> El usuario o cliente envía una pregunta en lenguaje natural al Framework orquestador. El Framework convierte esta pregunta en un vector numérico (Embedding) para buscar por significado semántico.
+            </div>
+          </div>
+
+          <div class="task-callout">
+            <span>PASO 2</span>
+            <p>Crea <code>api/src/services/finetuning.service.js</code> y <code>api/src/services/vector.service.js</code> para gestionar tanto el formateo de datasets SFT como la búsqueda por similitud de coseno en la Vector Database.</p>
+          </div>
+
+          <article class="code-panel code-panel--mint" data-code-panel>
+            <div class="code-panel__bar">
+              <div><i></i><i></i><i></i></div>
+              <span>CREA · api/src/services/vector.service.js (Extracto de Búsqueda Semántica)</span>
+              <button type="button" data-copy-code>Copiar código</button>
+            </div>
+            <pre><code><span class="code-line"><b>1</b><span><em>export function</em> similitudCoseno(vecA, vecB) {</span></span>
+<span class="code-line"><b>2</b><span>  <em>let</em> dot = 0, normA = 0, normB = 0;</span></span>
+<span class="code-line"><b>3</b><span>  <em>for</em> (<em>let</em> i = 0; i &lt; vecA.length; i++) {</span></span>
+<span class="code-line"><b>4</b><span>    dot += vecA[i] * vecB[i];</span></span>
+<span class="code-line"><b>5</b><span>    normA += vecA[i] * vecA[i];</span></span>
+<span class="code-line"><b>6</b><span>    normB += vecB[i] * vecB[i];</span></span>
+<span class="code-line"><b>7</b><span>  }</span></span>
+<span class="code-line"><b>8</b><span>  <em>return</em> Number((dot / (Math.sqrt(normA) * Math.sqrt(normB) || 1)).toFixed(4));</span></span>
+<span class="code-line"><b>9</b><span>}</span></span>
+<span class="code-line"><b>10</b><span></span></span>
+<span class="code-line"><b>11</b><span><em>export const</em> vectorService = {</span></span>
+<span class="code-line"><b>12</b><span>  listarDocumentos() { <em>return</em> DOCUMENTOS_SEMILLA; },</span></span>
+<span class="code-line"><b>13</b><span>  indexarDocumento(dto) {</span></span>
+<span class="code-line"><b>14</b><span>    <em>const</em> nuevo = { id: <q>`doc-0${DOCUMENTOS_SEMILLA.length + 1}`</q>, ...dto, vector: generarEmbedding(<q>`${dto.titulo} ${dto.contenido}`</q>) };</span></span>
+<span class="code-line"><b>15</b><span>    DOCUMENTOS_SEMILLA.unshift(nuevo);</span></span>
+<span class="code-line"><b>16</b><span>    <em>return</em> nuevo;</span></span>
+<span class="code-line"><b>17</b><span>  },</span></span>
+<span class="code-line"><b>18</b><span>  buscarSemantico(pregunta, topK = 4) {</span></span>
+<span class="code-line"><b>19</b><span>    <em>const</em> queryVector = generarEmbedding(pregunta);</span></span>
+<span class="code-line"><b>20</b><span>    <em>const</em> resultados = DOCUMENTOS_SEMILLA.map((doc) =&gt; ({ ...doc, vectorScore: similitudCoseno(queryVector, doc.vector) }))</span></span>
+<span class="code-line"><b>21</b><span>      .sort((a, b) =&gt; b.vectorScore - a.vectorScore)</span></span>
+<span class="code-line"><b>22</b><span>      .slice(0, topK + 1);</span></span>
+<span class="code-line"><b>23</b><span>    <em>return</em> { queryVector, resultados };</span></span>
+<span class="code-line"><b>24</b><span>  },</span></span>
+<span class="code-line"><b>25</b><span>};</span></span></code></pre>
+          </article>
+
+          <button class="checkpoint" type="button" data-complete="2">
+            <span class="checkpoint__box"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg></span>
+            <span><strong>Checkpoint 02</strong> Comprendo el flujo de 4 etapas de RAG y cómo opera la búsqueda semántica en la Vector Database.</span>
+          </button>
+        </section>
+
+        <!-- SECCIÓN 03: RAG RERANKED & CORRECTIVE RAG (DIAPOSITIVA 10) -->
+        <section id="reranker" class="lesson" data-step="3">
+          <header class="lesson__header">
+            <div>
+              <span class="section-index">03 / RAG - RERANKED (SLIDE 10) · 5 MIN</span>
+              <h2>El Filtro Maestro: Rerankers y Corrective RAG</h2>
+            </div>
+            <span class="lesson__stamp lesson__stamp--coral">RERANKER</span>
+          </header>
+
+          <div class="concept-strip concept-strip--cyan">
+            <p>Dentro del flujo de trabajo de un sistema RAG, los <strong>rerankers</strong> cumplen una función estratégica que impacta directamente en la calidad de la información recuperada y, en consecuencia, en la calidad de las respuestas generadas por el LLM.</p>
+            <div class="flow-mini">
+              <span>Retrieval</span><i>→</i><span>Reranker / Evaluator</span><i>→</i><span>Filter Noise</span><i>→</i><span>Generator</span>
+            </div>
+          </div>
+
+          <div class="check-list check-list--three">
+            <article>
+              <strong><i>✔</i> 1. Mejoran la Precisión</strong>
+              <p>Reevalúan semánticamente cada documento recuperado frente a la pregunta exacta para colocar en el top #1 la evidencia más pertinente.</p>
+            </article>
+            <article>
+              <strong><i>✔</i> 2. Elevan la Calidad del LLM</strong>
+              <p>Al alimentar el Prompt con fragmentos altamente relevantes y ordenados, el LLM genera respuestas fundamentadas y libres de alucinaciones.</p>
+            </article>
+            <article>
+              <strong><i>✔</i> 3. Reducen Ruido y Redundancia</strong>
+              <p>Mediante el flujo <em>Retrieval Evaluator</em> (<code>Correct</code> / <code>Ambiguous</code> / <code>Incorrect</code>) y <em>Knowledge Refinement</em> (<code>Decompose → Filter → Recompose</code>), eliminan fragmentos irrelevantes.</p>
+            </article>
+          </div>
+
+          <!-- SIMULADOR VISUAL INTERACTIVO DE RERANKER ON/OFF -->
+          <div class="rerank-lab" aria-label="Simulador interactivo de Reranker en RAG">
+            <div class="rerank-lab__head">
+              <div>
+                <span class="section-index" style="color:var(--game-cyan);margin-bottom:4px">LABORATORIO VISUAL (DIAPOSITIVA 10)</span>
+                <strong style="font-size:16px">Comparador en Vivo: Retrieval Crudo vs. RAG Reranked + Knowledge Refinement</strong>
+              </div>
+              <button id="toggleRerankerDemo" type="button" class="rerank-toggle-btn is-active">
+                ✔ RERANKER ACTIVO (ON)
+              </button>
+            </div>
+            <p style="margin:12px 0 0;color:#94a3b8;font-size:12px">
+              Consulta de prueba: <code>"¿Qué función cumplen los rerankers para mejorar la precisión y reducir el ruido en RAG?"</code>
+            </p>
+            <div id="rerankDemoList" class="rerank-cards" aria-live="polite"></div>
+          </div>
+
+          <div class="task-callout">
+            <span>PASO 3</span>
+            <p>Crea <code>api/src/services/reranker.service.js</code> para reordenar los documentos recuperados, filtrar el ruido y clasificar la evidencia en <code>Correct</code>, <code>Ambiguous</code> o <code>Incorrect</code>.</p>
+          </div>
+
+          <article class="code-panel code-panel--violet" data-code-panel>
+            <div class="code-panel__bar">
+              <div><i></i><i></i><i></i></div>
+              <span>CREA · api/src/services/reranker.service.js</span>
+              <button type="button" data-copy-code>Copiar código</button>
+            </div>
+            <pre><code><span class="code-line"><b>1</b><span><em>import</em> { vectorService } <em>from</em> <q>"./vector.service.js"</q>;</span></span>
+<span class="code-line"><b>2</b><span></span></span>
+<span class="code-line"><b>3</b><span><em>export const</em> rerankerService = {</span></span>
+<span class="code-line"><b>4</b><span>  ejecutarPipelineRAG(dto) {</span></span>
+<span class="code-line"><b>5</b><span>    <em>const</em> { queryVector, resultados } = vectorService.buscarSemantico(dto.pregunta, dto.topK);</span></span>
+<span class="code-line"><b>6</b><span>    <em>let</em> fragmentos = resultados.map((d) =&gt; ({ ...d, rerankScore: d.vectorScore }));</span></span>
+<span class="code-line"><b>7</b><span>    <em>let</em> ruidoEliminado = 0;</span></span>
+<span class="code-line"><b>8</b><span>    <em>let</em> evaluacionRecuperacion = <q>"Ambiguous"</q>;</span></span>
+<span class="code-line"><b>9</b><span></span></span>
+<span class="code-line"><b>10</b><span>    <em>if</em> (dto.useReranker) {</span></span>
+<span class="code-line"><b>11</b><span>      <em>const</em> reordenados = fragmentos</span></span>
+<span class="code-line"><b>12</b><span>        .map((doc) =&gt; ({ ...doc, rerankScore: calcularRerankScore(dto.pregunta, doc) }))</span></span>
+<span class="code-line"><b>13</b><span>        .sort((a, b) =&gt; b.rerankScore - a.rerankScore);</span></span>
+<span class="code-line"><b>14</b><span>      <em>const</em> filtrados = reordenados.filter((d) =&gt; d.categoria !== <q>"ruido"</q> &amp;&amp; d.rerankScore &gt;= 0.45);</span></span>
+<span class="code-line"><b>15</b><span>      ruidoEliminado = Math.max(1, reordenados.length - filtrados.length);</span></span>
+<span class="code-line"><b>16</b><span>      fragmentos = (filtrados.length ? filtrados : reordenados).slice(0, dto.topK);</span></span>
+<span class="code-line"><b>17</b><span>      evaluacionRecuperacion = fragmentos[0]?.rerankScore &gt;= 0.7 ? <q>"Correct"</q> : <q>"Ambiguous"</q>;</span></span>
+<span class="code-line"><b>18</b><span>    }</span></span>
+<span class="code-line"><b>19</b><span>    <small>// Ensambla Paso 3 (Prompt) y Paso 4 (Post Processing &amp; Response)</small></span></span>
+<span class="code-line"><b>20</b><span>    <em>return</em> { reranker: { activo: dto.useReranker, evaluacionRecuperacion, ruidoEliminado }, arquitectura4Pasos: { ... } };</span></span>
+<span class="code-line"><b>21</b><span>  },</span></span>
+<span class="code-line"><b>22</b><span>};</span></span></code></pre>
+          </article>
+
+          <button class="checkpoint" type="button" data-complete="3">
+            <span class="checkpoint__box"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg></span>
+            <span><strong>Checkpoint 03</strong> Comprendo las 3 ventajas del Reranker y probé el comparador visual ON/OFF.</span>
+          </button>
+        </section>
+
+        <!-- SECCIÓN 04: CONTROLADORES Y RUTAS -->
+        <section id="controladores" class="lesson" data-step="4">
+          <header class="lesson__header">
+            <div>
+              <span class="section-index">04 / CONTROLADORES Y RUTAS EXPRESS · 5 MIN</span>
+              <h2>Conecta los Endpoints del Oráculo</h2>
+            </div>
+            <span class="lesson__stamp lesson__stamp--mint">API EXPRESS</span>
+          </header>
+
+          <div class="task-callout">
+            <span>PASO 4</span>
+            <p>Crea <code>api/src/controllers/oraculo.controller.js</code> y <code>api/src/routes/oraculo.routes.js</code> para exponer los endpoints de Fine-Tuning, Vector DB y RAG.</p>
+          </div>
+
+          <article class="code-panel code-panel--blue" data-code-panel>
+            <div class="code-panel__bar">
+              <div><i></i><i></i><i></i></div>
+              <span>CREA · api/src/routes/oraculo.routes.js</span>
+              <button type="button" data-copy-code>Copiar código</button>
+            </div>
+            <pre><code><span class="code-line"><b>1</b><span><em>import</em> { Router } <em>from</em> <q>"express"</q>;</span></span>
+<span class="code-line"><b>2</b><span><em>import</em> { prepararFineTuning, listarDocumentos, indexarDocumento, consultarRAG, compararEnfoques } <em>from</em> <q>"../controllers/oraculo.controller.js"</q>;</span></span>
+<span class="code-line"><b>3</b><span><em>import</em> { validarParFineTuning, validarDocumento, validarConsultaRAG } <em>from</em> <q>"../validators/oraculo.validator.js"</q>;</span></span>
+<span class="code-line"><b>4</b><span></span></span>
+<span class="code-line"><b>5</b><span><em>export const</em> oraculoRouter = Router();</span></span>
+<span class="code-line"><b>6</b><span></span></span>
+<span class="code-line"><b>7</b><span>oraculoRouter.post(<q>"/finetuning/preparar"</q>, validarParFineTuning, prepararFineTuning);</span></span>
+<span class="code-line"><b>8</b><span>oraculoRouter.get(<q>"/rag/documentos"</q>, listarDocumentos);</span></span>
+<span class="code-line"><b>9</b><span>oraculoRouter.post(<q>"/rag/documentos"</q>, validarDocumento, indexarDocumento);</span></span>
+<span class="code-line"><b>10</b><span>oraculoRouter.post(<q>"/rag/consultar"</q>, validarConsultaRAG, consultarRAG);</span></span>
+<span class="code-line"><b>11</b><span>oraculoRouter.get(<q>"/comparar"</q>, compararEnfoques);</span></span></code></pre>
+          </article>
+
+          <div class="route-table" aria-label="Tabla de rutas de la API">
+            <div class="route-table__head">
+              <span>MÉTODO</span>
+              <span>RUTA</span>
+              <span>PROPÓSITO EN IA II</span>
+              <span>ESTADO</span>
+            </div>
+            <div>
+              <span class="method method--post">POST</span>
+              <code>/api/v1/finetuning/preparar</code>
+              <span>Transforma interacción real usuario-agente en JSONL (SFT)</span>
+              <strong>201 / 400</strong>
+            </div>
+            <div>
+              <span class="method method--get">GET</span>
+              <code>/api/v1/rag/documentos</code>
+              <span>Lista los puntos y vectores indexados en la Vector DB</span>
+              <strong>200 OK</strong>
+            </div>
+            <div>
+              <span class="method method--post">POST</span>
+              <code>/api/v1/rag/documentos</code>
+              <span>Calcula Embedding e indexa nuevo conocimiento en tiempo real</span>
+              <strong>201 / 400</strong>
+            </div>
+            <div>
+              <span class="method method--post">POST</span>
+              <code>/api/v1/rag/consultar</code>
+              <span>Ejecuta las 4 etapas RAG + Reranker (Corrective RAG)</span>
+              <strong>200 / 400</strong>
+            </div>
+            <div>
+              <span class="method method--get">GET</span>
+              <code>/api/v1/comparar</code>
+              <span>Entrega la matriz oficial Fine-Tuning vs RAG</span>
+              <strong>200 OK</strong>
+            </div>
+          </div>
+
+          <button class="checkpoint" type="button" data-complete="4">
+            <span class="checkpoint__box"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg></span>
+            <span><strong>Checkpoint 04</strong> Controladores y rutas RESTful del Oráculo Neural conectados.</span>
+          </button>
+        </section>
+
+        <!-- SECCIÓN 05: INSTALACIÓN Y CONFIGURACIÓN DE UNA BASE DE DATOS VECTORIAL (SLIDES 11 Y 12) -->
+        <section id="vector-db" class="lesson" data-step="5">
+          <header class="lesson__header">
+            <div>
+              <span class="section-index">05 / BASE DE DATOS VECTORIAL (SLIDES 11 Y 12) · 5 MIN</span>
+              <h2>Instalación y Configuración de una Vector DB</h2>
+            </div>
+            <span class="lesson__stamp lesson__stamp--blue">VECTOR DB</span>
+          </header>
+
+          <div class="concept-strip">
+            <p>Además del motor vectorial en memoria incluido en nuestra API para pruebas instantáneas, en producción puedes levantar un contenedor <strong>Qdrant</strong> o <strong>ChromaDB</strong> en Docker en menos de 1 minuto.</p>
+            <div class="flow-mini">
+              <span>Docker Run</span><i>→</i><span>Colección Vectorial</span><i>→</i><span>Upsert Embeddings</span><i>→</i><span>Semantic Search</span>
+            </div>
+          </div>
+
+          <article class="code-panel code-panel--blue" data-code-panel>
+            <div class="code-panel__bar">
+              <div><i></i><i></i><i></i></div>
+              <span>TERMINAL · Instalación rápida de Base de Datos Vectorial en Docker</span>
+              <button type="button" data-copy-code>Copiar código</button>
+            </div>
+            <pre><code><span class="code-line"><b>1</b><span><small># 1. Levantar motor de Base de Datos Vectorial (Qdrant) en el puerto 6333</small></span></span>
+<span class="code-line"><b>2</b><span>docker run -d --name campuslands-vectordb -p 6333:6333 qdrant/qdrant</span></span>
+<span class="code-line"><b>3</b><span></span></span>
+<span class="code-line"><b>4</b><span><small># 2. Crear una colección vectorial con métrica de similitud Cosine</small></span></span>
+<span class="code-line"><b>5</b><span>curl -X PUT http://localhost:6333/collections/oraculo_campuslands \</span></span>
+<span class="code-line"><b>6</b><span>  -H <q>"Content-Type: application/json"</q> \</span></span>
+<span class="code-line"><b>7</b><span>  -d <q>'{"vectors": {"size": 6, "distance": "Cosine"}}'</q></span></span></code></pre>
+          </article>
+
+          <button class="checkpoint" type="button" data-complete="5">
+            <span class="checkpoint__box"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg></span>
+            <span><strong>Checkpoint 05</strong> Conozco cómo instalar y configurar una Base de Datos Vectorial para sistemas RAG.</span>
+          </button>
+        </section>
+
+        <!-- SECCIÓN 06: PRUEBAS Y SIMULADOR EN VIVO -->
+        <section id="pruebas" class="lesson lesson--terminal" data-step="6">
+          <header class="lesson__header">
+            <div>
+              <span class="section-index">06 / BOSS FIGHT: SIMULADOR IA &amp; 10 TESTS · 5 MIN</span>
+              <h2>Prueba el Oráculo Neural en Vivo</h2>
+            </div>
+            <span class="lesson__stamp lesson__stamp--mint">BOSS FIGHT</span>
+          </header>
+
+          <div class="test-steps">
+            <article>
+              <span>1</span>
+              <p><strong>cd api &amp;&amp; npm test</strong><code>10 pruebas con node:test</code></p>
+            </article>
+            <article>
+              <span>2</span>
+              <p><strong>npm run check</strong><code>Verificación sintáctica ESM</code></p>
+            </article>
+            <article>
+              <span>3</span>
+              <p><strong>Simulador IA</strong><code>Prueba SFT, RAG y Reranker</code></p>
+            </article>
+          </div>
+
+          <div class="playground" aria-label="Simulador interactivo de Fine-Tuning y RAG">
+            <div class="request-builder">
+              <div class="request-builder__head">
+                <span>SIMULADOR DEL ORÁCULO (SFT + RAG RERANKED)</span>
+                <span class="live-badge"><i></i> EN VIVO</span>
+              </div>
+
+              <div class="request-line">
+                <select id="methodSelect" aria-label="Método HTTP">
+                  <option value="POST">POST</option>
+                  <option value="GET">GET</option>
+                </select>
+                <select id="routeSelect" aria-label="Ruta">
+                  <option value="/api/v1/rag/consultar">/api/v1/rag/consultar</option>
+                  <option value="/api/v1/finetuning/preparar">/api/v1/finetuning/preparar</option>
+                  <option value="/api/v1/rag/documentos">/api/v1/rag/documentos</option>
+                  <option value="/api/v1/comparar">/api/v1/comparar</option>
+                </select>
+              </div>
+
+              <label for="requestBody">CUERPO JSON (BODY)</label>
+              <textarea id="requestBody" spellcheck="false">{
+  "pregunta": "¿Qué función cumplen los rerankers para mejorar la precisión y reducir el ruido en RAG?",
+  "topK": 3,
+  "useReranker": true
+}</textarea>
+
+              <div class="preset-row">
+                <span>ESCENARIOS:</span>
+                <button type="button" data-preset="ragRerankOn">1. RAG con Reranker ON</button>
+                <button type="button" data-preset="ragRerankOff">2. RAG sin Reranker (Ruido)</button>
+                <button type="button" data-preset="sftDataset">3. Preparar Dataset SFT</button>
+                <button type="button" data-preset="newDoc">4. Indexar Nuevo Doc en Vector DB</button>
+                <button type="button" data-preset="compare">5. Matriz Fine-Tuning vs RAG</button>
+              </div>
+
+              <button id="sendRequest" class="send-button" type="button">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 14-7-7 14-2-5z" /></svg>
+                <span>Ejecutar en el Oráculo Neural</span>
+              </button>
+            </div>
+
+            <div class="response-console">
+              <div class="response-console__head">
+                <div><i></i><i></i><i></i></div>
+                <span id="responseStatus" class="response-status">200 OK</span>
+              </div>
+              <pre><code id="responseOutput"><span class="console-muted">// Haz clic en "Ejecutar en el Oráculo Neural" para observar las 4 etapas de RAG + Reranker o generar tu dataset SFT...</span></code></pre>
+              <div class="cookie-jar">
+                <span>ESTADO DEL MOTOR IA:</span>
+                <code id="cookieOutput">Vector DB: 6 docs indexados · Reranker: Activo</code>
+              </div>
+            </div>
+          </div>
+
+          <!-- RETO RÁPIDO FINE-TUNING VS RAG -->
+          <div class="quick-question">
+            <span>RETO RÁPIDO DE ARQUITECTURA IA</span>
+            <p>Tu empresa actualiza su catálogo de precios e inventario cada 5 minutos y necesita que el asistente responda con los precios exactos del día sin alucinar, manteniendo la analogía de <em>"examen a libro abierto (Open book quiz)"</em>. ¿Qué enfoque es el indicado?</p>
+            <div>
+              <button type="button" data-quiz-answer="pretrain">Pre-entrenar un LLM desde cero cada 5 minutos con CommonCrawl</button>
+              <button type="button" data-quiz-answer="rag">Arquitectura RAG + Reranker conectada a una Base de Datos Vectorial en tiempo real</button>
+              <button type="button" data-quiz-answer="sft">Hacer Fine-Tuning SFT cada 5 minutos modificando los pesos de la red neuronal</button>
+            </div>
+            <small id="quizFeedback"></small>
+          </div>
+
+          <button class="checkpoint" type="button" data-complete="6">
+            <span class="checkpoint__box"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg></span>
+            <span><strong>Checkpoint 06</strong> Completé las pruebas del Oráculo Neural y domino Fine-Tuning, RAG y Rerankers.</span>
+          </button>
+
+          <div id="finishCard" class="finish-card" aria-label="Laboratorio completado">
+            <span class="finish-card__eyebrow">¡MISIÓN CUMPLIDA · AI ARCHITECT CAMPUSLANDS!</span>
+            <h2>VICTORIA CAMPUSLANDS</h2>
+            <p>
+              Dominaste los fundamentos de Fine-Tuning (Pre-training vs Fine-tuning, SFT, RLHF, DPO, PEFT/LoRA y los 5 tipos de refinamiento) y la arquitectura Retrieval-Augmented Generation (RAG) en 4 etapas con Bases de Datos Vectoriales y Rerankers.
+            </p>
+            <button type="button" data-reset-progress>Reiniciar progreso del laboratorio</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

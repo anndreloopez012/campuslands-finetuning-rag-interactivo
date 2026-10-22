@@ -1,0 +1,17 @@
+{
+  "name": "api-finetuning-rag-campuslands",
+  "version": "1.0.0",
+  "description": "API REST de Fundamentos de Fine-Tuning (SFT/RLHF/DPO) y Arquitectura RAG con Reranker y Base Vectorial para Campuslands.",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test",
+    "check": "node --check src/app.js && node --check src/server.js && node --check src/dtos/oraculo.dto.js && node --check src/validators/oraculo.validator.js && node --check src/services/finetuning.service.js && node --check src/services/vector.service.js && node --check src/services/reranker.service.js && node --check src/controllers/oraculo.controller.js && node --check src/routes/oraculo.routes.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "express-validator": "^7.2.1"
+  }
+}
